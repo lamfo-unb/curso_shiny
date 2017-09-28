@@ -5,7 +5,11 @@ library(tidyverse)
 library(rgdal)
 library(leaflet)
 
-dados <- data.table::fread("/home/cayan/Documentos/shiny_bndes/bndes03.csv",header = TRUE)
+
+arquivo <- file.path(dirname(rstudioapi::getActiveDocumentContext()$path),
+                     "bndes03.csv")
+
+dados <- data.table::fread(arquivo,header = TRUE)
 # usuário   sistema decorrido 
 # 13.184     0.284    13.490 
 
@@ -52,7 +56,9 @@ dados_empre_porc <- dados %>%
 # organizacao_do_territorio >>> malhas_territoriais >>> malhas_municipais 
 #  >>> municipio_2015 >>> Brasil >>> BR >>> br_unidades_da_federacao.zip
 
-shp <- readOGR(dsn = "/home/cayan/Downloads/br_unidades_da_federacao", 
+arquivo2 <- file.path(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+shp <- readOGR(dsn = arquivo2, 
                layer = "BRUFE250GC_SIR", stringsAsFactors=FALSE, encoding="UTF-8")
 
 mapinha <- dados %>% 
