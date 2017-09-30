@@ -6,12 +6,8 @@ library(rgdal)
 library(leaflet)
 
 
-arquivo <- file.path(dirname(rstudioapi::getActiveDocumentContext()$path),
-                     "bndes03.csv")
-
-dados <- data.table::fread(arquivo,header = TRUE)
-# usuário   sistema decorrido 
-# 13.184     0.284    13.490 
+arquivo <- RCurl::getURL("https://raw.githubusercontent.com/lamfo-unb/curso_shiny/master/shiny_bndes/bndes03.csv")
+dados <- read.csv(text = arquivo , header = TRUE)
 
 dados <- dados %>% mutate( apoio            = str_to_upper(  str_trim(apoio) ),
                            Custo_Financeiro = str_trim(Custo_Financeiro),
