@@ -4,10 +4,14 @@ library(stringr)
 library(tidyverse)
 library(rgdal)
 library(leaflet)
+library(dplyr)
 
+# arquivo <- RCurl::getURL("https://raw.githubusercontent.com/lamfo-unb/curso_shiny/master/shiny_bndes/bndes03.csv")
 
-arquivo <- RCurl::getURL("https://raw.githubusercontent.com/lamfo-unb/curso_shiny/master/shiny_bndes/bndes03.csv")
-dados <- read.csv(text = arquivo , header = TRUE)
+caminho <- file.path(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+arquivo_csv <- file.path(caminho,"bndes03.csv")
+dados <- read_delim( arquivo_csv,delim = ",")
 
 dados <- dados %>% mutate( apoio            = str_to_upper(  str_trim(apoio) ),
                            Custo_Financeiro = str_trim(Custo_Financeiro),
@@ -52,10 +56,12 @@ dados_empre_porc <- dados %>%
 # organizacao_do_territorio >>> malhas_territoriais >>> malhas_municipais 
 #  >>> municipio_2015 >>> Brasil >>> BR >>> br_unidades_da_federacao.zip
 
-arquivo2 <- file.path(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-shp <- readOGR(dsn = arquivo2, 
+arquivo_shape <- file.path(caminho,"br_unidades_da_federacao",
+                           "BRUFE250GC_SIR.shp")
+shp <- readOGR(dsn = arquivo_shape, 
                layer = "BRUFE250GC_SIR", stringsAsFactors=FALSE, encoding="UTF-8")
+
 
 mapinha <- dados %>% 
   group_by(ano,UF) %>% 
